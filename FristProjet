@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawSheetName);
+
+      function drawSheetName() {
+        var queryString = encodeURIComponent('SELECT C, D OFFSET 0');
+        // LIMIT 5 significa que va a tomar 5 filas consecutivas
+        // Como la primera fila es la cabecera no se cuenta
+        // OFFSET 0 sería la segunda fila y OFFSET 8 la fila 10
+
+        var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1itIF7En9bmnggx-CHjJqsVZs-kSlRBB83cADFEzCQgQ/gviz/tq?sheet=Sheet1&headers=1&tq=' + queryString);
+        query.send(handleSampleDataQueryResponse);
+    }
+    function handleSampleDataQueryResponse(response) {
+             if (response.isError()) {
+                 alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+            return;
+            }
+
+            var data = response.getDataTable();
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, { title:"Finanzas", titleFontSize:40, width: '100%', isStacked: true
+            ,hAxis: {title: "Gastos", titleColor:'#00ff00', titleFontSize:20}
+            ,vAxis: {title: "Euros", titleColor:'#00ff00', titleFontSize:20}} 
+            );
+    }
+
+    </script>
+  </head>
+
+  <body>
+
+    <div id="chart_div"></div>
+  </body>
+</html>
